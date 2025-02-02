@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link id="favicon" rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==">
+</head>
+<body>
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timer-controls">
+            <label>Work Time (minutes): <input type="number" id="work-time" min="1" max="60"></label>
+            <label>Break Time (minutes): <input type="number" id="break-time" min="1" max="60"></label>
+        </div>
+        <div class="timer">
+            <span id="minutes"></span>:<span id="seconds"></span>
+        </div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="reset">Reset</button>
+            <button id="rest">Take a Rest</button>
+        </div>
+        <div class="mode">
+            <p id="mode-text">Work Time</p>
+        </div>
+    </div>
+    <script src="script.js?v=<?php echo time(); ?>"></script>
+</body>
+</html> 
