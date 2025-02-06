@@ -277,9 +277,9 @@ function updateTitle(mode) {
 
 function updateBackgroundColor(mode) {
     const gradients = {
-        'Work Time': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'Rest Time': 'linear-gradient(135deg, #48bb78 0%, #38b2ac 100%)',
-        'Break Time': 'linear-gradient(135deg, #ed8936 0%, #ed64a6 100%)'
+        'Work Time': 'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)',  // Cool blue gradient
+        'Rest Time': 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',  // Fresh mint gradient
+        'Break Time': 'linear-gradient(135deg, #00b4db 0%, #0083b0 100%)'  // Ocean blue gradient
     };
     document.body.style.background = gradients[mode] || gradients['Work Time'];
 }

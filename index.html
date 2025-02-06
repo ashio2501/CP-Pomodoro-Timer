@@ -29,6 +29,11 @@
             <p id="mode-text">Work Time</p>
         </div>
     </div>
-    <script src="script.js?v=<?php echo time(); ?>"></script>
+    <script>
+        // Add script tag with timestamp to prevent caching
+        const script = document.createElement('script');
+        script.src = `script.js?v=${new Date().getTime()}`;
+        document.body.appendChild(script);
+    </script>
 </body>
 </html> 
