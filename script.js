@@ -1,3 +1,21 @@
+// Add this at the beginning of your script.js file
+function preventBrowserCaching() {
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+    // Prevent Safari back-forward cache
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+}
+
+preventBrowserCaching();
+
 let timeLeft;
 let workTime;
 let breakTime;
@@ -12,7 +30,8 @@ const resetButton = document.getElementById('reset');
 const modeText = document.getElementById('mode-text');
 const workTimeInput = document.getElementById('work-time');
 const breakTimeInput = document.getElementById('break-time');
-const restButton = document.getElementById('rest');
+const restToggle = document.getElementById('rest-toggle');
+const toggleLabel = document.querySelector('.toggle-label');
 
 // Prompt for work time
 let workTimePrompt;
@@ -113,24 +132,80 @@ function resetTimer() {
     updateBackgroundColor('Work Time');
 }
 
-function takeRest() {
+function handleRestToggle(e) {
     if (timerId === null) {
-        alert('Timer must be running to take a rest or return to work!');
+        alert('Timer must be running to switch modes!');
+        e.target.checked = !e.target.checked;
         return;
     }
 
-    if (modeText.textContent === 'Rest Time') {
-        // Return to work
+    if (e.target.checked) {
+        // Switching to rest mode
+        savedTimeLeft = timeLeft;
+        
+        let restDuration;
+        do {
+            restDuration = parseInt(prompt('How many minutes would you like to rest? (max 5 minutes)'));
+            
+            if (restDuration === null || isNaN(restDuration)) {
+                e.target.checked = false;
+                return;
+            }
+            
+            if (restDuration <= 0) {
+                alert('Please enter a positive number');
+                continue;
+            }
+            
+            if (restDuration > 5) {
+                alert('Rest time cannot be more than 5 minutes. Please enter a smaller number.');
+                continue;
+            }
+            
+            break;
+            
+        } while (true);
+
         clearInterval(timerId);
-        timeLeft = savedTimeLeft;
-        modeText.textContent = 'Work Time';
-        updateTabColor('Work Time');
-        restButton.textContent = 'Take a Rest';
+        timeLeft = restDuration * 60;
+        modeText.textContent = 'Rest Time';
+        toggleLabel.textContent = 'Rest Mode';
+        updateTabColor('Rest Time');
         startButton.textContent = 'Pause';
         startButton.classList.add('active');
         updateDisplay();
         
-        // Start the work timer automatically
+        timerId = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            updateTitle('Rest Time');
+            if (timeLeft === 0) {
+                clearInterval(timerId);
+                timerId = null;
+                alert('Rest time is over! Back to work!');
+                timeLeft = savedTimeLeft;
+                modeText.textContent = 'Work Time';
+                toggleLabel.textContent = 'Work Mode';
+                updateTabColor('Work Time');
+                startButton.textContent = 'Start';
+                startButton.classList.remove('active');
+                restToggle.checked = false;
+                updateDisplay();
+            }
+        }, 1000);
+        updateTitle('Rest Time');
+        updateBackgroundColor('Rest Time');
+    } else {
+        // Switching back to work
+        clearInterval(timerId);
+        timeLeft = savedTimeLeft;
+        modeText.textContent = 'Work Time';
+        toggleLabel.textContent = 'Work Mode';
+        updateTabColor('Work Time');
+        startButton.textContent = 'Pause';
+        startButton.classList.add('active');
+        updateDisplay();
+        
         timerId = setInterval(() => {
             timeLeft--;
             updateDisplay();
@@ -146,75 +221,7 @@ function takeRest() {
         }, 1000);
         updateTitle('Work Time');
         updateBackgroundColor('Work Time');
-        return;
     }
-
-    // Only allow rest during work time
-    if (!isWorkTime) {
-        alert('You can only take a rest during work time!');
-        return;
-    }
-
-    let restDuration;
-    do {
-        restDuration = parseInt(prompt('How many minutes would you like to rest? (max 5 minutes)'));
-        
-        // Check if user clicked cancel or pressed escape
-        if (restDuration === null || isNaN(restDuration)) {
-            return;
-        }
-        
-        // Validate input is positive
-        if (restDuration <= 0) {
-            alert('Please enter a positive number');
-            continue;
-        }
-        
-        // If more than 5 minutes
-        if (restDuration > 5) {
-            alert('Rest time cannot be more than 5 minutes. Please enter a smaller number.');
-            continue;
-        }
-        
-        break; // Valid input, exit loop
-        
-    } while (true);
-
-    // Store current work time remaining
-    savedTimeLeft = timeLeft;
-    
-    // Clear current timer
-    clearInterval(timerId);
-    
-    // Set rest time
-    timeLeft = restDuration * 60;
-    modeText.textContent = 'Rest Time';
-    updateTabColor('Rest Time');
-    restButton.textContent = 'Return to Work';
-    startButton.textContent = 'Pause';
-    startButton.classList.add('active');
-    updateDisplay();
-    
-    // Start rest timer immediately
-    timerId = setInterval(() => {
-        timeLeft--;
-        updateDisplay();
-        updateTitle('Rest Time');
-        if (timeLeft === 0) {
-            clearInterval(timerId);
-            timerId = null;
-            alert('Rest time is over! Back to work!');
-            timeLeft = savedTimeLeft;
-            modeText.textContent = 'Work Time';
-            updateTabColor('Work Time');
-            restButton.textContent = 'Take a Rest';
-            startButton.textContent = 'Start';
-            startButton.classList.remove('active');
-            updateDisplay();
-        }
-    }, 1000);
-    updateTitle('Rest Time');
-    updateBackgroundColor('Rest Time');
 }
 
 // Initialize timeLeft
@@ -227,7 +234,7 @@ updateBackgroundColor('Work Time');
 // Event listeners
 startButton.addEventListener('click', startTimer);
 resetButton.addEventListener('click', resetTimer);
-restButton.addEventListener('click', takeRest);
+restToggle.addEventListener('change', handleRestToggle);
 
 // Initialize title
 //updateTitle('Work Time');

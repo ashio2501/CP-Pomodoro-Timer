@@ -7,11 +7,22 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Pomodoro Timer</title>
-    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Add timestamp to resource URLs
+        const timestamp = new Date().getTime();
+        document.write(`<link rel="stylesheet" href="styles.css?v=${timestamp}">`);
+    </script>
     <link id="favicon" rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==">
 </head>
 <body>
     <div class="container">
+        <div class="mode-toggle">
+            <label class="switch">
+                <input type="checkbox" id="rest-toggle">
+                <span class="slider round"></span>
+            </label>
+            <span class="toggle-label">Work Mode</span>
+        </div>
         <h1>Pomodoro Timer</h1>
         <div class="timer-controls">
             <label>Work Time (minutes): <input type="number" id="work-time" min="1" max="60"></label>
@@ -23,7 +34,6 @@
         <div class="controls">
             <button id="start">Start</button>
             <button id="reset">Reset</button>
-            <button id="rest">Take a Rest</button>
         </div>
         <div class="mode">
             <p id="mode-text">Work Time</p>
