@@ -5,22 +5,26 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    padding: 1rem;
     background: none;
     color: #2d3748;
     transition: all 0.5s ease;
     background-attachment: fixed;
+    box-sizing: border-box;
 }
 
 .container {
     text-align: center;
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 3rem;
+    padding: 2rem;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
+    width: 100%;
     max-width: 500px;
-    width: 90%;
+    margin: 1rem;
     position: relative;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -187,4 +191,26 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+    
+    .container {
+        margin: 0.5rem;
+        padding: 1.5rem;
+    }
+
+    .timer-controls label {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 1rem;
+    }
+
+    .timer-controls input {
+        width: 100%;
+        max-width: 200px;
+    }
 } 
